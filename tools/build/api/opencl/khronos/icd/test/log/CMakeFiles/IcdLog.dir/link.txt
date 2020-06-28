@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -O2 -g -DNDEBUG  -shared -Wl,-soname,libIcdLog.so -o libIcdLog.so CMakeFiles/IcdLog.dir/icd_test_log.c.o 

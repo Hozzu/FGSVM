@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++11 -O2 -g -DNDEBUG   CMakeFiles/clinfo.dir/clinfo.cpp.o  -o ../../bin/clinfo -Wl,-rpath,/home/phil/ROCm/ROCm-OpenCL-Runtime/build/api/opencl/khronos/icd ../../api/opencl/khronos/icd/libOpenCL.so.1.2 -lpthread -ldl 

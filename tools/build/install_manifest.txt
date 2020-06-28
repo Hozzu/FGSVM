@@ -1,0 +1,16 @@
+/home/phil/ROCm/install/bin/x86_64/clinfo
+/home/phil/ROCm/install/lib/x86_64/libamdocl64.so
+/home/phil/ROCm/install/lib/x86_64/libOpenCL.so.1.2
+/home/phil/ROCm/install/lib/x86_64/libOpenCL.so.1
+/home/phil/ROCm/install/include/CL/cl.hpp
+/home/phil/ROCm/install/include/CL/cl_ext.h
+/home/phil/ROCm/install/include/CL/cl_gl_ext.h
+/home/phil/ROCm/install/include/CL/cl_gl.h
+/home/phil/ROCm/install/include/CL/cl2.hpp
+/home/phil/ROCm/install/include/CL/opencl.h
+/home/phil/ROCm/install/include/CL/cl.h
+/home/phil/ROCm/install/include/CL/cl_platform.h
+/home/phil/ROCm/install/lib/x86_64/libOpenCL.so
+/home/phil/ROCm/install/lib/libOpenCL.so.1.2
+/home/phil/ROCm/install/lib/libOpenCL.so.1
+/home/phil/ROCm/install/lib/libOpenCL.so

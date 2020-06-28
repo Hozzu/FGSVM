@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/phil/ROCm/ROCm-OpenCL-Runtime/compiler/lib/loaders/elf/utils/libelf/memfile.cpp
+memfile.h
+/home/phil/ROCm/ROCm-OpenCL-Runtime/compiler/lib/loaders/elf/utils/libelf/memfile.h
+errno.h
+-
+stdlib.h
+-
+sys/stat.h
+-
+fcntl.h
+-
+algorithm
+-
+vector
+-
+cstring
+-
+unistd.h
+-
+sys/mman.h
+-
+sys/sendfile.h
+-
+io.h
+-
+
+/home/phil/ROCm/ROCm-OpenCL-Runtime/compiler/lib/loaders/elf/utils/libelf/memfile.h
+sys/types.h
+-
+sys/stat.h
+-
+

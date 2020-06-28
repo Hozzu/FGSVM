@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -O2 -g -DNDEBUG  -shared -Wl,-soname,libOpenCLDriverStub.so -o libOpenCLDriverStub.so CMakeFiles/OpenCLDriverStub.dir/cl.c.o CMakeFiles/OpenCLDriverStub.dir/cl_ext.c.o CMakeFiles/OpenCLDriverStub.dir/cl_gl.c.o CMakeFiles/OpenCLDriverStub.dir/icd.c.o -Wl,-rpath,/home/phil/ROCm/ROCm-OpenCL-Runtime/build/api/opencl/khronos/icd/test/log ../log/libIcdLog.so 

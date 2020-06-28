@@ -1,0 +1,40 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/oclruntime.dir/thread/thread.cpp.o"
+  "CMakeFiles/oclruntime.dir/thread/monitor.cpp.o"
+  "CMakeFiles/oclruntime.dir/thread/semaphore.cpp.o"
+  "CMakeFiles/oclruntime.dir/utils/flags.cpp.o"
+  "CMakeFiles/oclruntime.dir/utils/debug.cpp.o"
+  "CMakeFiles/oclruntime.dir/device/appprofile.cpp.o"
+  "CMakeFiles/oclruntime.dir/device/device.cpp.o"
+  "CMakeFiles/oclruntime.dir/device/hwdebug.cpp.o"
+  "CMakeFiles/oclruntime.dir/device/blitcl.cpp.o"
+  "CMakeFiles/oclruntime.dir/device/blit.cpp.o"
+  "CMakeFiles/oclruntime.dir/device/devkernel.cpp.o"
+  "CMakeFiles/oclruntime.dir/device/devwavelimiter.cpp.o"
+  "CMakeFiles/oclruntime.dir/device/devprogram.cpp.o"
+  "CMakeFiles/oclruntime.dir/platform/activity.cpp.o"
+  "CMakeFiles/oclruntime.dir/platform/kernel.cpp.o"
+  "CMakeFiles/oclruntime.dir/platform/context.cpp.o"
+  "CMakeFiles/oclruntime.dir/platform/command.cpp.o"
+  "CMakeFiles/oclruntime.dir/platform/ndrange.cpp.o"
+  "CMakeFiles/oclruntime.dir/platform/runtime.cpp.o"
+  "CMakeFiles/oclruntime.dir/platform/object.cpp.o"
+  "CMakeFiles/oclruntime.dir/platform/memory.cpp.o"
+  "CMakeFiles/oclruntime.dir/platform/program.cpp.o"
+  "CMakeFiles/oclruntime.dir/platform/commandqueue.cpp.o"
+  "CMakeFiles/oclruntime.dir/platform/agent.cpp.o"
+  "CMakeFiles/oclruntime.dir/os/os_win32.cpp.o"
+  "CMakeFiles/oclruntime.dir/os/alloc.cpp.o"
+  "CMakeFiles/oclruntime.dir/os/os.cpp.o"
+  "CMakeFiles/oclruntime.dir/os/os_posix.cpp.o"
+  "CMakeFiles/oclruntime.dir/__/compiler/lib/utils/options.cpp.o"
+  "CMakeFiles/oclruntime.dir/__/compiler/lib/loaders/elf/elf.cpp.o"
+  "CMakeFiles/oclruntime.dir/__/compiler/lib/loaders/elf/elf_utils.cpp.o"
+  "CMakeFiles/oclruntime.dir/__/compiler/tools/caching/cache.cpp.o"
+  "CMakeFiles/oclruntime.dir/device/comgrctx.cpp.o"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/oclruntime.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

@@ -1,0 +1,1 @@
+/usr/bin/cc -O2 -g -DNDEBUG   CMakeFiles/bc2h.dir/bc2h.c.o  -o bc2h 
