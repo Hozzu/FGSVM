@@ -749,7 +749,7 @@ bool Buffer::create() {
         deviceMemory_ = dev().deviceLocalAlloc(size(), (memFlags & CL_MEM_SVM_ATOMICS) != 0);
       }
       owner()->setSvmPtr(deviceMemory_);
-      printf("svm addr is %p, roc mem addr is %p\n", deviceMemory_, this);
+
 //pkshin start
       if (isPK) {
         owner()->commitSvmMemory();
