@@ -452,6 +452,7 @@ void Memory::syncCacheFromHost(VirtualGPU& gpu, device::Memory::SyncFlags syncFl
       if (owner()->getType() == CL_MEM_OBJECT_BUFFER) {
         amd::Coord3D region(owner()->getSize());
         result = gpu.blitMgr().writeBuffer(owner()->getHostMem(), *this, origin, region, Entire);
+        printf("%p %p\n",owner()->getHostMem(),this->getDeviceMemory());
       } else {
         amd::Image& image = static_cast<amd::Image&>(*owner());
         result = gpu.blitMgr().writeImage(owner()->getHostMem(), *this, origin, image.getRegion(),
@@ -472,7 +473,6 @@ void Memory::syncHostFromCache(device::Memory::SyncFlags syncFlags) {
   if(owner()->getSvmCleanMem() != nullptr && owner()->getLastWriter() != nullptr){
     //printf("syncHostFromCache\n");
     owner()->syncFinegrained();
-    owner()->signalWrite(nullptr);
   }
 //pkshin end
 
@@ -755,6 +755,7 @@ bool Buffer::create() {
         owner()->commitSvmMemory();
         owner()->setHostMem(owner()->getSvmPtr());
         owner()->setSvmCleanMem(owner()->getSvmPtr());
+        owner()->signalWrite(nullptr);
         if(!pinSystemMemory(owner()->getHostMem(), owner()->getSize())){
           printf("[PK] pinSystemMemory Error\n");
         }

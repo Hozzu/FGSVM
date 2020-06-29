@@ -501,7 +501,7 @@ void Memory::syncFinegrained(){
       *(memDiff_char + i) = *(clean_char + i) ^ *(host_char + i);
     }
 
-    for(size_t i = 0; i < numDevices_; ++i) {
+    for(size_t i = 0; i < numDevices_; i++) {
       if(!deviceMemories_[i].value_->getDiff(memDiffTemp, svmCleanAddress_)){
         printf("[PK]failed to get diff\n");
         return;
@@ -513,10 +513,11 @@ void Memory::syncFinegrained(){
     }
 
     for(size_t i = 0; i < size_ / sizeof(char); i++){
-      *(host_char + i) = *(host_char + i) ^ *(memDiff_char + i);
+      *(host_char + i) = *(clean_char + i) ^ *(memDiff_char + i);
     }
 
     memcpy(svmCleanAddress_, svmHostAddress_, size_);
+    signalWrite(nullptr);
 
     amd::Os::alignedFree(memDiff);
     amd::Os::alignedFree(memDiffTemp);
