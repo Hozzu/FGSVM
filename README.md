@@ -1,5 +1,7 @@
-# FGSVM
-FGSVM implementation based on ROCm which makes use of GPU memory
+# What is this?
+FGSVM (Fine-Grained Shared Virtual Memory) implementation in AMD ROCm (Radeon Open Compute Platform) only uses system memory.
+It makes FGSVM really slow compared to non-svm on AMD GPU.
+So I revised the FGSVM implementation in AMD ROCm to make use of GPU memory.
 
 ## BUILDING
 
@@ -23,4 +25,4 @@ The following build steps are performed:
     make
 
 ## HOW TO USE
-use CL_MEM_SVM_PK_BUFFER flag when call clSVMAlloc() instead of CL_MEM_SVM_FINE_GRAIN_BUFFER flag
+Use CL_MEM_SVM_PK_BUFFER flag when call clSVMAlloc() instead of CL_MEM_SVM_FINE_GRAIN_BUFFER flag.
