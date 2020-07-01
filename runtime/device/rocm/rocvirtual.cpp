@@ -2384,7 +2384,6 @@ void VirtualGPU::flush(amd::Command* list, bool wait) {
 
 //pkshin start
   for (auto& amdMemory : dirtyBuffers_) {
-    //printf("flush\n");
     amdMemory->syncFinegrained();
   }
   dirtyBuffers_.resize(0);

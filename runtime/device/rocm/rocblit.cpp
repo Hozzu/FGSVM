@@ -246,6 +246,7 @@ bool DmaBlitManager::writeBuffer(const void* srcHost, device::Memory& dstMemory,
         if (pinned != nullptr) {
           // Get device memory for this virtual device
           Memory* srcMemory = dev().getRocMemory(pinned);
+    
           if (!hsaCopy(*srcMemory, gpuMem(dstMemory), src, dstPin, copySizePin)) {
             LogWarning("DmaBlitManager::writeBuffer failed a pinned copy!");
             gpu().addPinnedMem(pinned);
@@ -578,8 +579,6 @@ bool DmaBlitManager::hsaCopy(const Memory& srcMemory, const Memory& dstMemory,
     srcAgent = srcMemory.dev().getBackendDevice();
     dstAgent = dstMemory.dev().getBackendDevice();
   }
-  printf("cpuAgent:%x, srcAgent: %x, dstAgent: %x\n", dev().getCpuAgent(), srcAgent.handle, dstAgent.handle);
-  printf("srcMemory addr: %p\n, dstMemory addr: %p\n", src, dst);
 
   const hsa_signal_value_t kInitVal = 1;
   hsa_signal_store_relaxed(completion_signal_, kInitVal);

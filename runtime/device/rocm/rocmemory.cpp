@@ -351,7 +351,7 @@ void Memory::syncCacheFromHost(VirtualGPU& gpu, device::Memory::SyncFlags syncFl
     mgpuCacheWriteBack();
   }
 //pkshin start
-  else if(owner()->getSvmCleanMem() != nullptr && owner()->getLastWriter() != nullptr){
+  else if(owner()->getSvmCleanMem() != nullptr){
     //printf("syncCacheFromHost\n");
     owner()->syncFinegrained();
   }
@@ -452,7 +452,6 @@ void Memory::syncCacheFromHost(VirtualGPU& gpu, device::Memory::SyncFlags syncFl
       if (owner()->getType() == CL_MEM_OBJECT_BUFFER) {
         amd::Coord3D region(owner()->getSize());
         result = gpu.blitMgr().writeBuffer(owner()->getHostMem(), *this, origin, region, Entire);
-        printf("%p %p\n",owner()->getHostMem(),this->getDeviceMemory());
       } else {
         amd::Image& image = static_cast<amd::Image&>(*owner());
         result = gpu.blitMgr().writeImage(owner()->getHostMem(), *this, origin, image.getRegion(),
@@ -470,7 +469,7 @@ void Memory::syncHostFromCache(device::Memory::SyncFlags syncFlags) {
   assert(owner() != nullptr);
 
 //pkshin start
-  if(owner()->getSvmCleanMem() != nullptr && owner()->getLastWriter() != nullptr){
+  if(owner()->getSvmCleanMem() != nullptr){
     //printf("syncHostFromCache\n");
     owner()->syncFinegrained();
   }
@@ -753,12 +752,12 @@ bool Buffer::create() {
 //pkshin start
       if (isPK) {
         owner()->commitSvmMemory();
-        owner()->setHostMem(owner()->getSvmPtr());
         owner()->setSvmCleanMem(owner()->getSvmPtr());
+        owner()->setHostMem(owner()->getSvmCleanMem());
         owner()->signalWrite(nullptr);
-        if(!pinSystemMemory(owner()->getHostMem(), owner()->getSize())){
-          printf("[PK] pinSystemMemory Error\n");
-        }
+        //if(!pinSystemMemory(owner()->getHostMem(), owner()->getSize())){
+        //  printf("[PK] pinSystemMemory Error\n");
+        //}
       }
 //pkshin end
     } else {

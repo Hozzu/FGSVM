@@ -484,43 +484,45 @@ void Memory::setSvmCleanMem(void* src){
 void Memory::syncFinegrained(){
   if(svmHostAddress_ && svmCleanAddress_){
     ScopedLock lock(lockMemoryOps_);
-    void * memDiff = amd::Os::alignedMalloc(size_, MEMOBJ_BASE_ADDR_ALIGN);
-    void * memDiffTemp = amd::Os::alignedMalloc(size_, MEMOBJ_BASE_ADDR_ALIGN);
+    if(lastWriter_ != nullptr){
+      void * memDiff = amd::Os::alignedMalloc(size_, MEMOBJ_BASE_ADDR_ALIGN);
+      void * memDiffTemp = amd::Os::alignedMalloc(size_, MEMOBJ_BASE_ADDR_ALIGN);
 
-    if(!memDiff | !memDiffTemp){
-      printf("[PK]syncFinegrained Error\n");
-      return;
-    }
-
-    char * memDiff_char = reinterpret_cast<char *>(memDiff);
-    char * memDiffTemp_char = reinterpret_cast<char *>(memDiffTemp);
-    char * clean_char = reinterpret_cast<char *>(svmCleanAddress_);
-    char * host_char = reinterpret_cast<char *>(svmHostAddress_);
-
-    for(size_t i = 0; i < size_ / sizeof(char); i++){
-      *(memDiff_char + i) = *(clean_char + i) ^ *(host_char + i);
-    }
-
-    for(size_t i = 0; i < numDevices_; i++) {
-      if(!deviceMemories_[i].value_->getDiff(memDiffTemp, svmCleanAddress_)){
-        printf("[PK]failed to get diff\n");
+      if(!memDiff | !memDiffTemp){
+        printf("[PK]syncFinegrained Error\n");
         return;
       }
 
-      for(size_t j = 0; j < size_ / sizeof(char); j++){
-        *(memDiff_char + j) = *(memDiff_char + j) | *(memDiffTemp_char + j);
-      }
-    }
+      char * memDiff_char = reinterpret_cast<char *>(memDiff);
+      char * memDiffTemp_char = reinterpret_cast<char *>(memDiffTemp);
+      char * clean_char = reinterpret_cast<char *>(svmCleanAddress_);
+      char * host_char = reinterpret_cast<char *>(svmHostAddress_);
 
-    for(size_t i = 0; i < size_ / sizeof(char); i++){
-      *(host_char + i) = *(clean_char + i) ^ *(memDiff_char + i);
+      for(size_t i = 0; i < size_ / sizeof(char); i++){
+        *(memDiff_char + i) = *(clean_char + i) ^ *(host_char + i);
+      }
+
+      for(size_t i = 0; i < numDevices_; i++) {
+        if(!deviceMemories_[i].value_->getDiff(memDiffTemp, svmCleanAddress_)){
+          printf("[PK]failed to get diff\n");
+          return;
+        }
+
+        for(size_t j = 0; j < size_ / sizeof(char); j++){
+          *(memDiff_char + j) = *(memDiff_char + j) | *(memDiffTemp_char + j);
+        }
+      }
+
+      for(size_t i = 0; i < size_ / sizeof(char); i++){
+        *(host_char + i) = *(clean_char + i) ^ *(memDiff_char + i);
+      }
+
+      amd::Os::alignedFree(memDiff);
+      amd::Os::alignedFree(memDiffTemp);
     }
 
     memcpy(svmCleanAddress_, svmHostAddress_, size_);
     signalWrite(nullptr);
-
-    amd::Os::alignedFree(memDiff);
-    amd::Os::alignedFree(memDiffTemp);
   }
 }
 //pkshin end
