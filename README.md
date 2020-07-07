@@ -27,4 +27,4 @@ The following build steps are performed:
     make
 
 ## HOW TO USE
-Use CL_MEM_SVM_PK_BUFFER flag when call clSVMAlloc() instead of CL_MEM_SVM_FINE_GRAIN_BUFFER flag.
+Use CL_MEM_SVM_PK_BUFFER flag instead of CL_MEM_SVM_FINE_GRAIN_BUFFER flag when you call clSVMAlloc() .
