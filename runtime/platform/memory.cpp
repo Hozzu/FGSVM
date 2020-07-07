@@ -493,13 +493,17 @@ void Memory::syncFinegrained(){
         return;
       }
 
-      char * memDiff_char = reinterpret_cast<char *>(memDiff);
-      char * memDiffTemp_char = reinterpret_cast<char *>(memDiffTemp);
-      char * clean_char = reinterpret_cast<char *>(svmCleanAddress_);
-      char * host_char = reinterpret_cast<char *>(svmHostAddress_);
+      uint64_t * memDiff_ptr = reinterpret_cast<uint64_t *>(memDiff);
+      uint64_t * memDiffTemp_ptr = reinterpret_cast<uint64_t *>(memDiffTemp);
+      uint64_t * clean_ptr = reinterpret_cast<uint64_t *>(svmCleanAddress_);
+      uint64_t * host_ptr = reinterpret_cast<uint64_t *>(svmHostAddress_);
 
-      for(size_t i = 0; i < size_ / sizeof(char); i++){
-        *(memDiff_char + i) = *(clean_char + i) ^ *(host_char + i);
+      for(size_t i = 0; i < size_ / sizeof(uint64_t); i++){
+        *(memDiff_ptr + i) = *(clean_ptr + i) ^ *(host_ptr + i);
+      }
+
+      for(size_t i = size_ / sizeof(uint64_t) * sizeof(uint64_t); i < size_; i++){
+        *(memDiff_ptr + i) = *(clean_ptr + i) ^ *(host_ptr + i);
       }
 
       for(size_t i = 0; i < numDevices_; i++) {
@@ -508,13 +512,21 @@ void Memory::syncFinegrained(){
           return;
         }
 
-        for(size_t j = 0; j < size_ / sizeof(char); j++){
-          *(memDiff_char + j) = *(memDiff_char + j) | *(memDiffTemp_char + j);
+        for(size_t j = 0; j < size_ / sizeof(uint64_t); j++){
+          *(memDiff_ptr + j) = *(memDiff_ptr + j) | *(memDiffTemp_ptr + j);
+        }
+
+        for(size_t j = size_ / sizeof(uint64_t) * sizeof(uint64_t); j < size_; j++){
+          *(memDiff_ptr + j) = *(memDiff_ptr + j) | *(memDiffTemp_ptr + j);
         }
       }
 
-      for(size_t i = 0; i < size_ / sizeof(char); i++){
-        *(host_char + i) = *(clean_char + i) ^ *(memDiff_char + i);
+      for(size_t i = 0; i < size_ / sizeof(uint64_t); i++){
+        *(host_ptr + i) = *(clean_ptr + i) ^ *(memDiff_ptr + i);
+      }
+
+      for(size_t i = size_ / sizeof(uint64_t) * sizeof(uint64_t); i < size_; i++){
+        *(host_ptr + i) = *(clean_ptr + i) ^ *(memDiff_ptr + i);
       }
 
       amd::Os::alignedFree(memDiff);

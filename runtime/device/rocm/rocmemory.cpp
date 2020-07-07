@@ -616,12 +616,16 @@ bool Memory::getDiff(void * dst, void * clean){
     return false;
   }
 
-  char * hostMem_char = reinterpret_cast<char *>(gpuMemory);
-  char * dst_char = reinterpret_cast<char *>(dst);
-  char * clean_char = reinterpret_cast<char *>(clean);
+  uint64_t * hostMem_ptr = reinterpret_cast<uint64_t *>(gpuMemory);
+  uint64_t * dst_ptr = reinterpret_cast<uint64_t *>(dst);
+  uint64_t * clean_ptr = reinterpret_cast<uint64_t *>(clean);
 
-  for(size_t i = 0; i < size() / sizeof(char); i++){
-    *(dst_char + i) = *(clean_char + i) ^ *(hostMem_char + i);
+  for(size_t i = 0; i < size() / sizeof(uint64_t); i++){
+    *(dst_ptr + i) = *(clean_ptr + i) ^ *(hostMem_ptr + i);
+  }
+
+  for(size_t i = size() / sizeof(uint64_t) * sizeof(uint64_t); i < size(); i++){
+    *(dst_ptr + i) = *(clean_ptr + i) ^ *(hostMem_ptr + i);
   }
 
   amd::Os::alignedFree(gpuMemory);
