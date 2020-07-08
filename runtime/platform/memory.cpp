@@ -497,13 +497,17 @@ void Memory::syncFinegrained(){
       uint64_t * memDiffTemp_ptr = reinterpret_cast<uint64_t *>(memDiffTemp);
       uint64_t * clean_ptr = reinterpret_cast<uint64_t *>(svmCleanAddress_);
       uint64_t * host_ptr = reinterpret_cast<uint64_t *>(svmHostAddress_);
+      uint8_t * memDiff_char = reinterpret_cast<uint8_t *>(memDiff);
+      uint8_t * memDiffTemp_char = reinterpret_cast<uint8_t *>(memDiffTemp);
+      uint8_t * clean_char = reinterpret_cast<uint8_t *>(svmCleanAddress_);
+      uint8_t * host_char = reinterpret_cast<uint8_t *>(svmHostAddress_);
 
       for(size_t i = 0; i < size_ / sizeof(uint64_t); i++){
         *(memDiff_ptr + i) = *(clean_ptr + i) ^ *(host_ptr + i);
       }
 
       for(size_t i = size_ / sizeof(uint64_t) * sizeof(uint64_t); i < size_; i++){
-        *(memDiff_ptr + i) = *(clean_ptr + i) ^ *(host_ptr + i);
+        *(memDiff_char + i) = *(clean_char + i) ^ *(host_char + i);
       }
 
       for(size_t i = 0; i < numDevices_; i++) {
@@ -517,7 +521,7 @@ void Memory::syncFinegrained(){
         }
 
         for(size_t j = size_ / sizeof(uint64_t) * sizeof(uint64_t); j < size_; j++){
-          *(memDiff_ptr + j) = *(memDiff_ptr + j) | *(memDiffTemp_ptr + j);
+          *(memDiff_char + j) = *(memDiff_char + j) | *(memDiffTemp_char + j);
         }
       }
 
@@ -526,7 +530,7 @@ void Memory::syncFinegrained(){
       }
 
       for(size_t i = size_ / sizeof(uint64_t) * sizeof(uint64_t); i < size_; i++){
-        *(host_ptr + i) = *(clean_ptr + i) ^ *(memDiff_ptr + i);
+        *(host_char + i) = *(clean_char + i) ^ *(memDiff_char + i);
       }
 
       amd::Os::alignedFree(memDiff);
