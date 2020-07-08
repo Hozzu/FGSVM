@@ -351,12 +351,11 @@ void Memory::syncCacheFromHost(VirtualGPU& gpu, device::Memory::SyncFlags syncFl
     mgpuCacheWriteBack();
   }
 //pkshin start
-  else if(owner()->getSvmCleanMem() != nullptr && owner()->getLastWriter() != nullptr){
+  else if(owner()->getSvmCleanMem() != nullptr){
     //printf("syncCacheFromHost\n");
     owner()->syncFinegrained();
   }
 //pkshin end
-
   // If host memory doesn't have direct access, then we have to synchronize
   if (!isHostMemDirectAccess() && (nullptr != owner()->getHostMem())) {
     bool hasUpdates = true;
@@ -440,6 +439,7 @@ void Memory::syncCacheFromHost(VirtualGPU& gpu, device::Memory::SyncFlags syncFl
       if (owner()->getType() == CL_MEM_OBJECT_BUFFER) {
         amd::Coord3D region(owner()->getSize());
         result = gpu.blitMgr().copyBuffer(pinned, *this, origin, origin, region, Entire);
+
       } else {
         amd::Image& image = static_cast<amd::Image&>(*owner());
         result =
@@ -452,6 +452,7 @@ void Memory::syncCacheFromHost(VirtualGPU& gpu, device::Memory::SyncFlags syncFl
       if (owner()->getType() == CL_MEM_OBJECT_BUFFER) {
         amd::Coord3D region(owner()->getSize());
         result = gpu.blitMgr().writeBuffer(owner()->getHostMem(), *this, origin, region, Entire);
+
       } else {
         amd::Image& image = static_cast<amd::Image&>(*owner());
         result = gpu.blitMgr().writeImage(owner()->getHostMem(), *this, origin, image.getRegion(),
@@ -469,10 +470,9 @@ void Memory::syncHostFromCache(device::Memory::SyncFlags syncFlags) {
   assert(owner() != nullptr);
 
 //pkshin start
-  if(owner()->getSvmCleanMem() != nullptr && owner()->getLastWriter() != nullptr){
+  if(owner()->getSvmCleanMem() != nullptr){
     //printf("syncHostFromCache\n");
     owner()->syncFinegrained();
-    owner()->signalWrite(nullptr);
   }
 //pkshin end
 
@@ -617,11 +617,18 @@ bool Memory::getDiff(void * dst, void * clean){
     return false;
   }
 
-  char * hostMem_char = reinterpret_cast<char *>(gpuMemory);
-  char * dst_char = reinterpret_cast<char *>(dst);
-  char * clean_char = reinterpret_cast<char *>(clean);
+  uint64_t * hostMem_ptr = reinterpret_cast<uint64_t *>(gpuMemory);
+  uint64_t * dst_ptr = reinterpret_cast<uint64_t *>(dst);
+  uint64_t * clean_ptr = reinterpret_cast<uint64_t *>(clean);
+  uint8_t * hostMem_char = reinterpret_cast<uint8_t *>(gpuMemory);
+  uint8_t * dst_char = reinterpret_cast<uint8_t *>(dst);
+  uint8_t * clean_char = reinterpret_cast<uint8_t *>(clean);
 
-  for(size_t i = 0; i < size() / sizeof(char); i++){
+  for(size_t i = 0; i < size() / sizeof(uint64_t); i++){
+    *(dst_ptr + i) = *(clean_ptr + i) ^ *(hostMem_ptr + i);
+  }
+
+  for(size_t i = size() / sizeof(uint64_t) * sizeof(uint64_t); i < size(); i++){
     *(dst_char + i) = *(clean_char + i) ^ *(hostMem_char + i);
   }
 
@@ -734,8 +741,7 @@ bool Buffer::create() {
     const bool isFineGrain = memFlags & CL_MEM_SVM_FINE_GRAIN_BUFFER;
 //pkshin start
     const bool isPK = memFlags & CL_MEM_SVM_PK_BUFFER;
-//pkshin end    
-
+//pkshin end 
     if (owner()->getSvmPtr() == reinterpret_cast<void*>(1)) {
       if (isFineGrain) {
         if (memFlags & CL_MEM_SVM_ATOMICS) {
@@ -747,19 +753,21 @@ bool Buffer::create() {
         flags_ |= HostMemoryDirectAccess;
       } else {
         deviceMemory_ = dev().deviceLocalAlloc(size(), (memFlags & CL_MEM_SVM_ATOMICS) != 0);
+//pkshin start
+        if (isPK) {
+          owner()->setSvmPtr(deviceMemory_);
+          owner()->commitSvmMemory();
+          owner()->setSvmCleanMem(owner()->getSvmPtr());
+          owner()->setHostMem(owner()->getSvmCleanMem());
+          owner()->signalWrite(nullptr);
+          //if(!pinSystemMemory(owner()->getHostMem(), owner()->getSize())){
+          //  printf("[PK] pinSystemMemory Error\n");
+          //}
+        }
+  //pkshin end
       }
       owner()->setSvmPtr(deviceMemory_);
-      printf("svm addr is %p, roc mem addr is %p\n", deviceMemory_, this);
-//pkshin start
-      if (isPK) {
-        owner()->commitSvmMemory();
-        owner()->setHostMem(owner()->getSvmPtr());
-        owner()->setSvmCleanMem(owner()->getSvmPtr());
-        if(!pinSystemMemory(owner()->getHostMem(), owner()->getSize())){
-          printf("[PK] pinSystemMemory Error\n");
-        }
-      }
-//pkshin end
+
     } else {
       deviceMemory_ = owner()->getSvmPtr();
     }
@@ -776,7 +784,6 @@ bool Buffer::create() {
 
     return deviceMemory_ != nullptr;
   }
-
   // Interop buffer
   if (owner()->isInterop()) return createInteropBuffer(GL_ARRAY_BUFFER, 0);
 

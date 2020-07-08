@@ -246,7 +246,7 @@ bool DmaBlitManager::writeBuffer(const void* srcHost, device::Memory& dstMemory,
         if (pinned != nullptr) {
           // Get device memory for this virtual device
           Memory* srcMemory = dev().getRocMemory(pinned);
-
+    
           if (!hsaCopy(*srcMemory, gpuMem(dstMemory), src, dstPin, copySizePin)) {
             LogWarning("DmaBlitManager::writeBuffer failed a pinned copy!");
             gpu().addPinnedMem(pinned);

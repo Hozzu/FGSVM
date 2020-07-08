@@ -1109,7 +1109,7 @@ void VirtualGPU::submitWriteMemory(amd::WriteMemoryCommand& cmd) {
   } else {
     cmd.destination().signalWrite(&dev());
 //pkshin start    
-    dirtyBuffers_.push_back(&cmd.destination());
+    dirtyBuffers_.push_back(&(cmd.destination()));
 //pkshin end    
   }
 
@@ -1416,7 +1416,7 @@ void VirtualGPU::submitCopyMemoryP2P(amd::CopyMemoryP2PCommand& cmd) {
 
   cmd.destination().signalWrite(&dstDevMem->dev());
 //pkshin start  
-  dirtyBuffers_.push_back(&cmd.destination());
+  dirtyBuffers_.push_back(&(cmd.destination()));
 //pkshin end  
 
   profilingEnd(cmd);
@@ -1683,7 +1683,7 @@ void VirtualGPU::submitUnmapMemory(amd::UnmapMemoryCommand& cmd) {
 
     cmd.memory().signalWrite(&dev());
 //pkshin start    
-    dirtyBuffers_.push_back(&cmd.memory());
+    dirtyBuffers_.push_back(&(cmd.memory()));
 //pkshin end    
   }
 
@@ -2384,7 +2384,6 @@ void VirtualGPU::flush(amd::Command* list, bool wait) {
 
 //pkshin start
   for (auto& amdMemory : dirtyBuffers_) {
-    //printf("flush\n");
     amdMemory->syncFinegrained();
   }
   dirtyBuffers_.resize(0);

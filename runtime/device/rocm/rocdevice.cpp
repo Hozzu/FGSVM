@@ -1594,9 +1594,8 @@ device::Memory* Device::createMemory(amd::Memory& owner) const {
   if (memory == nullptr) {
     return nullptr;
   }
-
+  
   bool result = memory->create();
-
   if (!result) {
     LogError("Failed creating memory");
     delete memory;
