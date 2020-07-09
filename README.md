@@ -30,7 +30,7 @@ The following build steps are performed:
 Use CL_MEM_SVM_PK_BUFFER flag instead of CL_MEM_SVM_FINE_GRAIN_BUFFER flag when you call clSVMAlloc().
 
 ## Result
-This figure shows the ratio of GPU kernel execution time when using revised FGSVM to when using original FGSVM.
+This figure shows the ratio of GPU kernel execution time of Rodinia benchmark suite when using revised FGSVM to when using original FGSVM.
 Lower is better and lower than 1 means performance improvement.
 
 ![image](https://user-images.githubusercontent.com/28533445/87012127-d015c700-c203-11ea-9c1e-b30bee796827.png)
