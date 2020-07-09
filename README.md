@@ -32,4 +32,4 @@ Use CL_MEM_SVM_PK_BUFFER flag instead of CL_MEM_SVM_FINE_GRAIN_BUFFER flag when 
 ## Result
 This figure shows the ratio of GPU kernel execution time when using revised FGSVM to when using original FGSVM.
 
-![image](https://user-images.githubusercontent.com/28533445/87009655-7233b000-c200-11ea-9f39-be9bc6104b32.png)
+![image](https://user-images.githubusercontent.com/28533445/87010693-e589f180-c201-11ea-993c-1ce7d03e3286.png)
