@@ -34,4 +34,4 @@ I tested the implementation on Rodinia benchmark suite.
 Following figure shows the ratio of GPU kernel execution time when using revised FGSVM to when using original FGSVM.
 Lower is better and lower than 1 means performance improvement.
 
-![image](https://user-images.githubusercontent.com/28533445/87012127-d015c700-c203-11ea-9c1e-b30bee796827.png)
+![image](https://user-images.githubusercontent.com/28533445/87104231-3f39fc80-c292-11ea-8c3b-c35a77ff0f61.png)
