@@ -5,7 +5,7 @@ FGSVM (Fine-Grained Shared Virtual Memory) implementation in AMD ROCm (Radeon Op
 It makes FGSVM slow compared to non-svm on AMD GPU.
 So I revised the FGSVM implementation in AMD ROCm to make use of GPU memory.
 
-## BUILDING
+## Building
 
 To install additional dependencies:
 
@@ -26,7 +26,7 @@ The following build steps are performed:
     cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DLLVM_INCLUDES=<path-to-llvm-include> -DCMAKE_PREFIX_PATH=<path-to-amd_comgr> -DUSE_COMGR_LIBRARY=yes ..
     make
 
-## HOW TO USE
+## How to use
 Use CL_MEM_SVM_PK_BUFFER flag instead of CL_MEM_SVM_FINE_GRAIN_BUFFER flag when you call clSVMAlloc().
 
 ## Result
