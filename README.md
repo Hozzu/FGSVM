@@ -31,7 +31,7 @@ Use CL_MEM_SVM_PK_BUFFER flag instead of CL_MEM_SVM_FINE_GRAIN_BUFFER flag when 
 
 ## Result
 I tested the implementation on Rodinia benchmark suite.
-Following figure shows the ratio of GPU kernel execution time when using revised FGSVM to when using original FGSVM.
-Lower is better and lower than 1 means performance improvement.
+Following figure shows the ratio of GPU kernel execution time when using original FGSVM to when using revised FGSVM.
+Higher is better and higher than 1 means performance improvement.
 
-![image](https://user-images.githubusercontent.com/28533445/87104231-3f39fc80-c292-11ea-8c3b-c35a77ff0f61.png)
+![image](https://user-images.githubusercontent.com/28533445/87268057-60098880-c504-11ea-824d-6d9dafc5514d.png)
